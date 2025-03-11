@@ -8,21 +8,29 @@ int generator(int num){
     int random_number;
     int max = 27;
     int min = 1;
+    //printf("num equals: %d\n", num);
     char key[num +1];
     key[0] = '\0';
     //char convert[numb + 1];
     for (i=0; i < num; i++) {
         random_number = (rand() % (max - min + 1) + min);
+        //printf("number: %d ", random_number);
         if (random_number == 27){
             key[i] = ' ';
-        } else {
+        } 
+        //if (i == num -1){
+         //   printf("last cha\n");
+         //   key[i] = '\n';
+         //   printf("should be a blank line above\n");
+        //}
+        else {
             key[i] = random_number + 64;
         }
-        
-        printf("i: %c\n", key[i]);}
-        key[num] = '\n';
-        printf("key: %s\n", key);
+        key[num] = '\0';
+        //printf("i %d: %c\n", i, key[i]);}
+        //printf("key: %s\n", key);
     return 0;
+}
 }
 
 int main(int argc, char *argv[]) {
