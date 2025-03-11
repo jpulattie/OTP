@@ -6,20 +6,22 @@ int generator(int num){
     int i;
     char alpha;
     int random_number;
-    int max = 26;
-    int min = 0;
+    int max = 27;
+    int min = 1;
     char key[num +1];
+    key[0] = '\0';
     //char convert[numb + 1];
     for (i=0; i < num; i++) {
         random_number = (rand() % (max - min + 1) + min);
-        if (random_number == 0){
-            strcat(key," ");
+        if (random_number == 27){
+            key[i] = ' ';
         } else {
-            alpha = (char)(random_number + 64);
-            strcat(key,alpha);
+            key[i] = random_number + 64;
         }
         
-        printf("i: %d\n", i);}
+        printf("i: %c\n", key[i]);}
+        key[num] = '\n';
+        printf("key: %s\n", key);
     return 0;
 }
 
