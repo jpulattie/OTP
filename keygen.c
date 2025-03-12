@@ -29,18 +29,21 @@ char *generator(int num, char *key)
         {
             key[i] = random_number + 64;
         }
-        key[num] = '\0';
-        // printf("i %d: %c\n", i, key[i]);}
+        key[num] = '\n';
+        //printf("i %d: %c\n", i, key[i]);
+    }
+        //printf("-%d-", key[num]);
         printf("%s\n", key);
         return key;
     }
-}
+
 
 int main(int argc, char *argv[])
 {
     int randomGen = atoi(argv[1]);
 
     char key[randomGen + 1];
+    //printf("random gen:%d\n", randomGen);
     int final;
     generator(randomGen, key);
     return 0;
