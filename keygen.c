@@ -29,7 +29,7 @@ char *generator(int num, char *key)
         {
             key[i] = random_number + 64;
         }
-        key[num] = '\n';
+        //key[num] = '\n';
         //printf("i %d: %c\n", i, key[i]);
     }
         //printf("-%d-", key[num]);
