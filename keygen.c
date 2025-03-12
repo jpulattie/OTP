@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 char *generator(int num, char *key)
 {
@@ -42,9 +43,10 @@ int main(int argc, char *argv[])
 {
     int randomGen = atoi(argv[1]);
 
-    char key[randomGen + 1];
+    char key[randomGen];
     //printf("random gen:%d\n", randomGen);
     int final;
+    srand(time(NULL));
     generator(randomGen, key);
     return 0;
 }

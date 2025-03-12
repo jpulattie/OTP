@@ -5,6 +5,7 @@
 #include <sys/types.h>  // ssize_t
 #include <sys/socket.h> // send(),recv()
 #include <netdb.h>      // gethostbyname()
+#include <ctype.h>
 
 /**
 * Client code
@@ -12,9 +13,37 @@
 * 2. Prompt the user for input and send that input as a message to the server.
 * 3. Print the message received from the server and exit the program.
 */
+char *encryption(char *keyText, char *messageText) {
+  
+  char *enc_string;
+  enc_string = calloc(strlen(messageText) + 1, sizeof(char));
+  printf("str len of messageText %ld\n", strlen(messageText));
+  int i;
+  for (int i = 0; i < strlen(messageText); i++) {
+    messageText[i] = toupper(messageText[i]);
+  }
+  for (int i=0; i<strlen(messageText); i++) {
+    printf("i: %d\n", i);
+    int conv;
+    printf("messageText[i]: %d\n", messageText[i]);
+    printf("keyText[i]: %d\n", keyText[i]);
+    conv = (((messageText[i]-64) + (keyText[i]-64))) + 64 ;
+    printf("number conversion: %d\n", conv);
 
+    if (((messageText[i] + keyText[i])) == 91) {
+      enc_string[i] = ' ';
+    } else {
+      enc_string[i] = conv ;
+    }
+  }
 
-char *readFile(char * filePath){
+  printf("encryption string: -%s-\n", enc_string);
+  enc_string[strlen(messageText)] = '\0';
+
+  return enc_string;
+}
+
+char *readFile(char *filePath){
   char *currLine = NULL;
   size_t len = 0;
   FILE *inputFile = fopen(filePath, "r");
@@ -23,7 +52,7 @@ char *readFile(char * filePath){
   rewind(inputFile);
   char *readFileText = malloc(size +1);
   size_t readInBytes = fread(readFileText, 1, size, inputFile);
-  readFileText[readInBytes] = '\n';
+  readFileText[readInBytes] = '\0';
   fclose(inputFile);
   //printf("Read file: %s\n", readFileText);
   return readFileText;
@@ -73,9 +102,9 @@ int main(int argc, char *argv[]) {
 }
 
 // assign args to be 0-input file 1-key 2-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
-  char* key = malloc(strlen(argv[2] +1));
+  char* key = malloc(strlen(argv[2]));
   key = strcpy(key, argv[2]);
-  char* message = malloc(strlen(argv[1] +1));
+  char* message = malloc(strlen(argv[1]));
   message = strcpy(message, argv[1]);
   int portNumber  = atoi(argv[3]);
   char* hostname= malloc(10);
@@ -107,13 +136,14 @@ int main(int argc, char *argv[]) {
   // Get input message from user
   //printf("CLIENT: Enter text to send to the server, and then hit enter: ");
   char *keyText;
-  keyText = malloc(strlen(readFile(key)) +1);
+  keyText = malloc(strlen(readFile(key)));
   keyText = readFile(key);
-  //char *messageText;
-  //messageText = malloc(strlen(readFile(message)) +1);
-  //messageText = readFile(message);
-  printf("key: %s\n", keyText);
-  //printf("message: %s\n", messageText);
+  char *messageText;
+  messageText = malloc(strlen(readFile(message)));
+  messageText = readFile(message);
+  printf("key: -%s-\n", keyText);
+  printf("message: -%s-\n", messageText);
+  encryption(keyText,messageText);
 
 
   // Clear out the buffer array
