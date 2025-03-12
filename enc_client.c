@@ -35,7 +35,7 @@ void setupAddressStruct(struct sockaddr_in* address,
   printf("portNumber: %d hostname: %s\n", portNumber, hostname);
   fflush(stdout);
   // Get the DNS entry for this host name
-  struct hostent* hostInfo = gethostbyname("localhost"); 
+  struct hostent* hostInfo = gethostbyname(hostname); 
   if (hostInfo == NULL) { 
     fprintf(stderr, "CLIENT: ERROR, no such host\n"); 
     exit(0); 
@@ -52,11 +52,21 @@ int main(int argc, char *argv[]) {
   char buffer[256];
   // Check usage & args
 
-// assign args to be 0-input file 1-key 3-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
+  for (int i = 0; i < argc; i++) {
+    printf("argv[%d]: %s\n", i, argv[i]);
+}
 
+// assign args to be 0-input file 1-key 2-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
+  char* key = malloc(strlen(argv[1] +1));
+  key = strcpy(key, argv[1]);
+  int portNumber  = atoi(argv[3]);
+  char* hostname= malloc(10);
+  hostname = strcpy(hostname, "localhost");
+  printf("hostname %s port %d\n", hostname, portNumber);
+  fflush(stdout);
 
   if (argc < 3) { 
-    fprintf(stderr,"USAGE: %s hostname port\n", argv[0]); 
+    fprintf(stderr,"USAGE: %s %d hostname port\n", hostname, portNumber); 
     exit(0); 
 
 
@@ -70,7 +80,7 @@ int main(int argc, char *argv[]) {
   }
 
    // Set up the server address struct
-  setupAddressStruct(&serverAddress, atoi(argv[2]), argv[1]);
+  setupAddressStruct(&serverAddress, portNumber, hostname);
 
   // Connect to server
   if (connect(socketFD, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0){
@@ -78,6 +88,9 @@ int main(int argc, char *argv[]) {
   }
   // Get input message from user
   printf("CLIENT: Enter text to send to the server, and then hit enter: ");
+  
+
+
   // Clear out the buffer array
   memset(buffer, '\0', sizeof(buffer));
   // Get input from the user, trunc to buffer - 1 chars, leaving \0

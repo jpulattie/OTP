@@ -80,6 +80,7 @@ int main(int argc, char *argv[]){
     if (charsRead < 0){
       error("ERROR reading from socket");
     }
+    // ENCODE THE MESSAGE HERE!!!!!!!!!!
     printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
     // Send a Success message back to the client
