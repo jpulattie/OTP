@@ -32,24 +32,17 @@ char *encryption(char *buffer) {
     int conv;
     printf("messageText[i]: %d\n", messageText[i]-65);
     printf("keyText[i]: %d\n", keyText[i]-65);
-    conv = (((messageText[i]-65) + (keyText[i]-65)));
-    if (conv == 27) {
-      conv = 32;
-    } else if (conv <= 26) {
-      conv = (conv + 65);
-    } else if (conv > 27 ) {
-      conv = (conv - 26) + 65;
-    }
-    printf("number conversion: %d\n", conv);
+    conv = (((messageText[i]-65) + (keyText[i]-65))%26);
+    printf("conv: %d\n", conv);
 
-    if (((messageText[i] + keyText[i])) == 91) {
-      enc_string[i] = ' ';
+    if (messageText[1] == 32) {
+      enc_string[i] = 32;
     } else {
-      enc_string[i] = conv ;
+      enc_string[i] = conv + 65 ;
     }
+    //printf("encryption string so far... -%s-\n", enc_string);
   }
 
-  printf("encryption string: -%s-\n", enc_string);
   //enc_string[strlen(messageText)] = '\0';
   
   return enc_string;

@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
 //THEN SEND THE ENCRYPTION MESSAGE TO DEC_CLIENT, FORWARD TO DEC_SERVER AND DO THE OPPOSITE FUNCTIONALITY
 
   // Clear out the buffer array
-  memset(buffer, '\0', sizeof(buffer));
+  memset(buffer, '\0', sizeof(buffer)+1);
   // Get input from the user, trunc to buffer - 1 chars, leaving \0
   //fgets(buffer, sizeof(buffer) - 1, encryption(keyText,messageText));
 
