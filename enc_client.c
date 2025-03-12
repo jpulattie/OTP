@@ -25,9 +25,16 @@ char *encryption(char *keyText, char *messageText) {
   for (int i=0; i<strlen(messageText); i++) {
     printf("i: %d\n", i);
     int conv;
-    printf("messageText[i]: %d\n", messageText[i]);
-    printf("keyText[i]: %d\n", keyText[i]);
-    conv = (((messageText[i]-64) + (keyText[i]-64))) + 64 ;
+    printf("messageText[i]: %d\n", messageText[i]-65);
+    printf("keyText[i]: %d\n", keyText[i]-65);
+    conv = (((messageText[i]-65) + (keyText[i]-65)));
+    if (conv == 27) {
+      conv = 32;
+    } else if (conv <= 26) {
+      conv = (conv + 65);
+    } else if (conv > 27 ) {
+      conv = (conv - 26) + 65;
+    }
     printf("number conversion: %d\n", conv);
 
     if (((messageText[i] + keyText[i])) == 91) {
@@ -143,18 +150,20 @@ int main(int argc, char *argv[]) {
   messageText = readFile(message);
   printf("key: -%s-\n", keyText);
   printf("message: -%s-\n", messageText);
-  encryption(keyText,messageText);
-
+  
+//THIS IS AN INCORRECT SETUP ->. SEND THE KEY TEXT AND MESSAGE TEXT TO THE BUFFER AND OFF TO SERVER 
+//SEPARATED BY A NEW LINE CHAR TO SPLIT THEM
+//THEN TAKE THE ENCRYPTION FUNCTION AND USE IT IN THE SERVER FILE TO ENCRYPT THE FILE AND RETURN THE ENCRYPTION MESSAGE
+//THEN SEND THE ENCRYPTION MESSAGE TO DEC_CLIENT, FORWARD TO DEC_SERVER AND DO THE OPPOSITE FUNCTIONALITY
 
   // Clear out the buffer array
   memset(buffer, '\0', sizeof(buffer));
   // Get input from the user, trunc to buffer - 1 chars, leaving \0
-  //fgets(buffer, sizeof(buffer) - 1, stdin);
+  //fgets(buffer, sizeof(buffer) - 1, encryption(keyText,messageText));
+
+  char *encryption_message = encryption(keyText,messageText);
+  strncpy(buffer, encryption_message, sizeof(buffer)-1);
   // Remove the trailing \n that fgets adds
-
-
-
-
   buffer[strcspn(buffer, "\n")] = '\0'; 
 
   // Send message to server
