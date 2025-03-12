@@ -5,12 +5,54 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <ctype.h>
+
 
 // Error function used for reporting issues
 void error(const char *msg) {
   perror(msg);
   exit(1);
 } 
+
+char *encryption(char *buffer) {
+  char *messageText;
+  char *keyText;
+  messageText = strtok(buffer, " ");
+  keyText = strtok(NULL," ");
+  char *enc_string;
+  enc_string = calloc(strlen(messageText) + 1, sizeof(char));
+  printf("str len of messageText %ld\n", strlen(messageText));
+  int i;
+  for (int i = 0; i < strlen(messageText); i++) {
+    messageText[i] = toupper(messageText[i]);
+  }
+  for (int i=0; i<strlen(messageText); i++) {
+    printf("i: %d\n", i);
+    int conv;
+    printf("messageText[i]: %d\n", messageText[i]-65);
+    printf("keyText[i]: %d\n", keyText[i]-65);
+    conv = (((messageText[i]-65) + (keyText[i]-65)));
+    if (conv == 27) {
+      conv = 32;
+    } else if (conv <= 26) {
+      conv = (conv + 65);
+    } else if (conv > 27 ) {
+      conv = (conv - 26) + 65;
+    }
+    printf("number conversion: %d\n", conv);
+
+    if (((messageText[i] + keyText[i])) == 91) {
+      enc_string[i] = ' ';
+    } else {
+      enc_string[i] = conv ;
+    }
+  }
+
+  printf("encryption string: -%s-\n", enc_string);
+  enc_string[strlen(messageText)] = '\0';
+
+  return enc_string;
+}
 
 // Set up the address struct for the server socket
 void setupAddressStruct(struct sockaddr_in* address, 
@@ -75,6 +117,7 @@ int main(int argc, char *argv[]){
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
     printf("message: %s", buffer);
+    printf("After encryption... %s\n", encryption(buffer));
     // Read the client's message from the socket
     charsRead = recv(connectionSocket, buffer, 255, 0); 
     if (charsRead < 0){
@@ -83,9 +126,10 @@ int main(int argc, char *argv[]){
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
     printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
+    encryption(buffer);
     // Send a Success message back to the client
     charsRead = send(connectionSocket, 
-                    "I am the server, and I got your message", 39, 0); 
+                    encryption(buffer), strlen(encryption(buffer)), 0); 
     if (charsRead < 0){
       error("ERROR writing to socket");
     }

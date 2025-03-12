@@ -13,42 +13,19 @@
 * 2. Prompt the user for input and send that input as a message to the server.
 * 3. Print the message received from the server and exit the program.
 */
-char *encryption(char *keyText, char *messageText) {
-  
-  char *enc_string;
-  enc_string = calloc(strlen(messageText) + 1, sizeof(char));
-  printf("str len of messageText %ld\n", strlen(messageText));
-  int i;
-  for (int i = 0; i < strlen(messageText); i++) {
-    messageText[i] = toupper(messageText[i]);
-  }
-  for (int i=0; i<strlen(messageText); i++) {
-    printf("i: %d\n", i);
-    int conv;
-    printf("messageText[i]: %d\n", messageText[i]-65);
-    printf("keyText[i]: %d\n", keyText[i]-65);
-    conv = (((messageText[i]-65) + (keyText[i]-65)));
-    if (conv == 27) {
-      conv = 32;
-    } else if (conv <= 26) {
-      conv = (conv + 65);
-    } else if (conv > 27 ) {
-      conv = (conv - 26) + 65;
-    }
-    printf("number conversion: %d\n", conv);
+char *send_to_serv(char *keyText, char *messageText) {
+  char *combined;
+  combined = calloc(strlen(messageText) + 1 + strlen(keyText) + 1, sizeof(char));
+  strcpy(combined, messageText);
+  printf("combined -%s-\n", combined);
+  strcat(combined, " ");
+  printf("combined -%s-\n", combined);
+  strcat(combined, keyText);
+  printf("combined -%s-\n", combined);
 
-    if (((messageText[i] + keyText[i])) == 91) {
-      enc_string[i] = ' ';
-    } else {
-      enc_string[i] = conv ;
-    }
-  }
-
-  printf("encryption string: -%s-\n", enc_string);
-  enc_string[strlen(messageText)] = '\0';
-
-  return enc_string;
+  return combined;
 }
+
 
 char *readFile(char *filePath){
   char *currLine = NULL;
@@ -161,7 +138,7 @@ int main(int argc, char *argv[]) {
   // Get input from the user, trunc to buffer - 1 chars, leaving \0
   //fgets(buffer, sizeof(buffer) - 1, encryption(keyText,messageText));
 
-  char *encryption_message = encryption(keyText,messageText);
+  char *encryption_message = send_to_serv(keyText,messageText);
   strncpy(buffer, encryption_message, sizeof(buffer)-1);
   // Remove the trailing \n that fgets adds
   buffer[strcspn(buffer, "\n")] = '\0'; 
