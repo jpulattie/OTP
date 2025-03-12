@@ -13,6 +13,22 @@
 * 3. Print the message received from the server and exit the program.
 */
 
+
+char *readFile(char * filePath){
+  char *currLine = NULL;
+  size_t len = 0;
+  FILE *inputFile = fopen(filePath, "r");
+  fseek(inputFile, 0, SEEK_END);
+  long size = ftell(inputFile);
+  rewind(inputFile);
+  char *readFileText = malloc(size +1);
+  size_t readInBytes = fread(readFileText, 1, size, inputFile);
+  readFileText[readInBytes] = '\n';
+  fclose(inputFile);
+  //printf("Read file: %s\n", readFileText);
+  return readFileText;
+};
+
 // Error function used for reporting issues
 void error(const char *msg) { 
   perror(msg); 
@@ -57,8 +73,10 @@ int main(int argc, char *argv[]) {
 }
 
 // assign args to be 0-input file 1-key 2-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
-  char* key = malloc(strlen(argv[1] +1));
-  key = strcpy(key, argv[1]);
+  char* key = malloc(strlen(argv[2] +1));
+  key = strcpy(key, argv[2]);
+  char* message = malloc(strlen(argv[1] +1));
+  message = strcpy(message, argv[1]);
   int portNumber  = atoi(argv[3]);
   char* hostname= malloc(10);
   hostname = strcpy(hostname, "localhost");
@@ -87,15 +105,26 @@ int main(int argc, char *argv[]) {
     error("CLIENT: ERROR connecting");
   }
   // Get input message from user
-  printf("CLIENT: Enter text to send to the server, and then hit enter: ");
-  
+  //printf("CLIENT: Enter text to send to the server, and then hit enter: ");
+  char *keyText;
+  keyText = malloc(strlen(readFile(key)) +1);
+  keyText = readFile(key);
+  //char *messageText;
+  //messageText = malloc(strlen(readFile(message)) +1);
+  //messageText = readFile(message);
+  printf("key: %s\n", keyText);
+  //printf("message: %s\n", messageText);
 
 
   // Clear out the buffer array
   memset(buffer, '\0', sizeof(buffer));
   // Get input from the user, trunc to buffer - 1 chars, leaving \0
-  fgets(buffer, sizeof(buffer) - 1, stdin);
+  //fgets(buffer, sizeof(buffer) - 1, stdin);
   // Remove the trailing \n that fgets adds
+
+
+
+
   buffer[strcspn(buffer, "\n")] = '\0'; 
 
   // Send message to server
