@@ -31,7 +31,7 @@ char *generator(int num, char *key)
         }
         key[num] = '\0';
         // printf("i %d: %c\n", i, key[i]);}
-        // printf("key: %s\n", key);
+        printf("%s\n", key);
         return key;
     }
 }
