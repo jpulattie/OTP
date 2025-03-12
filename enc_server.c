@@ -17,11 +17,12 @@ void error(const char *msg) {
 char *encryption(char *buffer) {
   char *messageText;
   char *keyText;
-  messageText = strtok(buffer, " ");
+  messageText = strtok(buffer, "\n");
   keyText = strtok(NULL," ");
   char *enc_string;
-  enc_string = calloc(strlen(messageText) + 1, sizeof(char));
+  enc_string = calloc(strlen(messageText), sizeof(char));
   printf("str len of messageText %ld\n", strlen(messageText));
+  printf("message to check last char -%s-\n", messageText);
   int i;
   for (int i = 0; i < strlen(messageText); i++) {
     messageText[i] = toupper(messageText[i]);
@@ -49,8 +50,8 @@ char *encryption(char *buffer) {
   }
 
   printf("encryption string: -%s-\n", enc_string);
-  enc_string[strlen(messageText)] = '\0';
-
+  //enc_string[strlen(messageText)] = '\0';
+  
   return enc_string;
 }
 
@@ -117,7 +118,7 @@ int main(int argc, char *argv[]){
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
     printf("message: %s", buffer);
-    printf("After encryption... %s\n", encryption(buffer));
+    //printf("After encryption... %s\n", encryption(buffer));
     // Read the client's message from the socket
     charsRead = recv(connectionSocket, buffer, 255, 0); 
     if (charsRead < 0){
@@ -126,14 +127,15 @@ int main(int argc, char *argv[]){
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
     printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
-    encryption(buffer);
+    char *returnMessage = encryption(buffer);
     // Send a Success message back to the client
     charsRead = send(connectionSocket, 
-                    encryption(buffer), strlen(encryption(buffer)), 0); 
+                    returnMessage, strlen(returnMessage), 0); 
     if (charsRead < 0){
       error("ERROR writing to socket");
     }
     // Close the connection socket for this client
+    free(returnMessage);
     close(connectionSocket); 
   }
   // Close the listening socket

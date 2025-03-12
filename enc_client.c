@@ -15,7 +15,7 @@
 */
 char *send_to_serv(char *keyText, char *messageText) {
   char *combined;
-  combined = calloc(strlen(messageText) + 1 + strlen(keyText) + 1, sizeof(char));
+  combined = calloc(strlen(messageText) + 1 + strlen(keyText), sizeof(char));
   strcpy(combined, messageText);
   printf("combined -%s-\n", combined);
   strcat(combined, " ");
@@ -139,17 +139,17 @@ int main(int argc, char *argv[]) {
   //fgets(buffer, sizeof(buffer) - 1, encryption(keyText,messageText));
 
   char *encryption_message = send_to_serv(keyText,messageText);
-  strncpy(buffer, encryption_message, sizeof(buffer)-1);
+  //strncpy(buffer, encryption_message, sizeof(buffer)-1);
   // Remove the trailing \n that fgets adds
-  buffer[strcspn(buffer, "\n")] = '\0'; 
+  //buffer[strcspn(buffer, "\n")] = '\0'; 
 
   // Send message to server
   // Write to the server
-  charsWritten = send(socketFD, buffer, strlen(buffer), 0); 
+  charsWritten = send(socketFD, encryption_message, strlen(encryption_message), 0); 
   if (charsWritten < 0){
     error("CLIENT: ERROR writing to socket");
   }
-  if (charsWritten < strlen(buffer)){
+  if (charsWritten < strlen(encryption_message)){
     printf("CLIENT: WARNING: Not all data written to socket!\n");
   }
 
@@ -162,6 +162,7 @@ int main(int argc, char *argv[]) {
     error("CLIENT: ERROR reading from socket");
   }
   printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
+  printf("last char is... -%d-\n",buffer[strlen(buffer)]);
 
   // Close the socket
   close(socketFD); 
