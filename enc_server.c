@@ -74,6 +74,7 @@ int main(int argc, char *argv[]){
 
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
+    printf("message: %s", buffer);
     // Read the client's message from the socket
     charsRead = recv(connectionSocket, buffer, 255, 0); 
     if (charsRead < 0){

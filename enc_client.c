@@ -32,8 +32,10 @@ void setupAddressStruct(struct sockaddr_in* address,
   // Store the port number
   address->sin_port = htons(portNumber);
 
+  printf("portNumber: %d hostname: %s\n", portNumber, hostname);
+  fflush(stdout);
   // Get the DNS entry for this host name
-  struct hostent* hostInfo = gethostbyname(hostname); 
+  struct hostent* hostInfo = gethostbyname("localhost"); 
   if (hostInfo == NULL) { 
     fprintf(stderr, "CLIENT: ERROR, no such host\n"); 
     exit(0); 
@@ -49,9 +51,16 @@ int main(int argc, char *argv[]) {
   struct sockaddr_in serverAddress;
   char buffer[256];
   // Check usage & args
+
+// assign args to be 0-input file 1-key 3-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
+
+
   if (argc < 3) { 
     fprintf(stderr,"USAGE: %s hostname port\n", argv[0]); 
     exit(0); 
+
+
+
   } 
 
   // Create a socket
