@@ -17,8 +17,11 @@ void error(const char *msg) {
 char *encryption(char *buffer) {
   char *messageText;
   char *keyText;
-  messageText = strtok(buffer, "\n");
+  messageText = strtok(buffer, "\n\n");
   keyText = strtok(NULL," ");
+  printf("check");
+  printf("message text %s\n", messageText);
+  printf("key text %s\n", keyText);
   char *enc_string;
   enc_string = calloc(strlen(messageText), sizeof(char));
   //printf("str len of messageText %ld\n", strlen(messageText));
@@ -30,21 +33,27 @@ char *encryption(char *buffer) {
   for (int i=0; i<strlen(messageText); i++) {
     //printf("i: %d\n", i);
     int conv;
-    //printf("messageText[i]: %d\n", messageText[i]-65);
-    //printf("keyText[i]: %d\n", keyText[i]-65);
-    conv = (((messageText[i]-65) - (keyText[i]-65))%26);
-    //printf("conv: %d\n", conv);
+    printf("messageText[i]: %d\n", messageText[i]-65);
+    printf("keyText[i]: %d\n", keyText[i+1]-65);
+    conv = (((messageText[i]-65) - (keyText[i+1]-65))%26);
+    printf("conv: %d\n", conv);
 
-    if (messageText[1] == 32) {
+    if (conv < 0){
+      conv = (conv + 26);
+    }
+    printf("conv: %d\n", conv);
+
+    if (messageText[i] == 32) {
       enc_string[i] = 32;
     } else {
       enc_string[i] = conv + 65 ;
     }
-    //printf("encryption string so far... -%s-\n", enc_string);
+    printf("encryption string so far... -%s-\n", enc_string);
   }
 
   //enc_string[strlen(messageText)] = '\0';
-  
+  printf("encrypted string in server %s\n", enc_string);
+
   return enc_string;
 }
 
@@ -104,9 +113,9 @@ int main(int argc, char *argv[]){
       error("ERROR on accept");
     }
 
-    printf("SERVER: Connected to client running at host %d port %d\n", 
-                          ntohs(clientAddress.sin_addr.s_addr),
-                          ntohs(clientAddress.sin_port));
+    //printf("SERVER: Connected to client running at host %d port %d\n", 
+    //                      ntohs(clientAddress.sin_addr.s_addr),
+    //                      ntohs(clientAddress.sin_port));
 
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
@@ -118,7 +127,7 @@ int main(int argc, char *argv[]){
       error("ERROR reading from socket");
     }
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
-    printf("SERVER: I received this from the client: \"%s\"\n", buffer);
+    //printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
     char *returnMessage = encryption(buffer);
     // Send a Success message back to the client
@@ -127,6 +136,7 @@ int main(int argc, char *argv[]){
     if (charsRead < 0){
       error("ERROR writing to socket");
     }
+    printf("return message: %s\n", returnMessage);
     // Close the connection socket for this client
     free(returnMessage);
     close(connectionSocket); 

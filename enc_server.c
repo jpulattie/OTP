@@ -16,7 +16,9 @@ void error(const char *msg) {
 
 char *encryption(char *buffer) {
   char *messageText;
+  //printf("buffer text in encryption func: %s\n", buffer);
   char *keyText;
+
   messageText = strtok(buffer, "\n");
   keyText = strtok(NULL," ");
   char *enc_string;
@@ -35,16 +37,16 @@ char *encryption(char *buffer) {
     conv = (((messageText[i]-65) + (keyText[i]-65))%26);
     //printf("conv: %d\n", conv);
 
-    if (messageText[1] == 32) {
+    if (messageText[i] == 32) {
       enc_string[i] = 32;
     } else {
       enc_string[i] = conv + 65 ;
     }
-    ////printf("encryption string so far... -%s-\n", enc_string);
+    //printf("encryption string so far... -%s-\n", enc_string);
   }
 
   //enc_string[strlen(messageText)] = '\0';
-  
+  //printf("encrypted string in server %s\n", enc_string);
   return enc_string;
 }
 
@@ -104,9 +106,9 @@ int main(int argc, char *argv[]){
       error("ERROR on accept");
     }
 
-    printf("SERVER: Connected to client running at host %d port %d\n", 
-                          ntohs(clientAddress.sin_addr.s_addr),
-                          ntohs(clientAddress.sin_port));
+    //printf("SERVER: Connected to client running at host %d port %d\n", 
+    //                      ntohs(clientAddress.sin_addr.s_addr),
+    //                      ntohs(clientAddress.sin_port));
 
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
@@ -118,15 +120,17 @@ int main(int argc, char *argv[]){
       error("ERROR reading from socket");
     }
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
-    printf("SERVER: I received this from the client: \"%s\"\n", buffer);
+    //printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
     char *returnMessage = encryption(buffer);
+    //printf("buffer message: %s\n", buffer);
     // Send a Success message back to the client
     charsRead = send(connectionSocket, 
                     returnMessage, strlen(returnMessage), 0); 
     if (charsRead < 0){
       error("ERROR writing to socket");
     }
+    printf("return message: %s\n", returnMessage);
     // Close the connection socket for this client
     free(returnMessage);
     close(connectionSocket); 

@@ -17,11 +17,11 @@ char *send_to_serv(char *keyText, char *messageText) {
   char *combined;
   combined = calloc(strlen(messageText) + 1 + strlen(keyText), sizeof(char));
   strcpy(combined, messageText);
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
   strcat(combined, " ");
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
   strcat(combined, keyText);
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
 
   return combined;
 }
@@ -61,7 +61,7 @@ void setupAddressStruct(struct sockaddr_in* address,
   // Store the port number
   address->sin_port = htons(portNumber);
 
-  printf("portNumber: %d hostname: %s\n", portNumber, hostname);
+  //printf("portNumber: %d hostname: %s\n", portNumber, hostname);
   fflush(stdout);
   // Get the DNS entry for this host name
   struct hostent* hostInfo = gethostbyname(hostname); 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
   // Check usage & args
 
   for (int i = 0; i < argc; i++) {
-    printf("argv[%d]: %s\n", i, argv[i]);
+    //printf("argv[%d]: %s\n", i, argv[i]);
 }
 
 // assign args to be 0-input file 1-key 2-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
@@ -93,16 +93,30 @@ int main(int argc, char *argv[]) {
   int portNumber  = atoi(argv[3]);
   char* hostname= malloc(10);
   hostname = strcpy(hostname, "localhost");
-  printf("hostname %s port %d\n", hostname, portNumber);
+  //printf("hostname %s port %d\n", hostname, portNumber);
   fflush(stdout);
 
   if (argc < 3) { 
     fprintf(stderr,"USAGE: %s %d hostname port\n", hostname, portNumber); 
     exit(0); 
-
-
-
   } 
+ // Get input message from user
+  //printf("CLIENT: Enter text to send to the server, and then hit enter: ");
+  char *keyText;
+  keyText = malloc(strlen(readFile(key)));
+  keyText = readFile(key);
+  char *messageText;
+  messageText = malloc(strlen(readFile(message)));
+  messageText = readFile(message);
+  //printf("key: -%s-\n", keyText);
+  //printf("message: -%s-\n", messageText); 
+  if ((strlen(keyText)) < strlen(messageText)-1){
+    //printf("length of key %ld\n", strlen(keyText));
+    //printf("length of message %ld\n", strlen(messageText));
+
+    fprintf(stderr,"Error key '%s' is too short\n", argv[2]);
+    exit(1);
+  }
 
   // Create a socket
   socketFD = socket(AF_INET, SOCK_STREAM, 0); 
@@ -117,28 +131,12 @@ int main(int argc, char *argv[]) {
   if (connect(socketFD, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0){
     error("CLIENT: ERROR connecting");
   }
-  // Get input message from user
-  //printf("CLIENT: Enter text to send to the server, and then hit enter: ");
-  char *keyText;
-  keyText = malloc(strlen(readFile(key)));
-  keyText = readFile(key);
-  char *messageText;
-  messageText = malloc(strlen(readFile(message)));
-  messageText = readFile(message);
-  //printf("key: -%s-\n", keyText);
-  //printf("message: -%s-\n", messageText);
-  
-//THIS IS AN INCORRECT SETUP ->. SEND THE KEY TEXT AND MESSAGE TEXT TO THE BUFFER AND OFF TO SERVER 
-//SEPARATED BY A NEW LINE CHAR TO SPLIT THEM
-//THEN TAKE THE ENCRYPTION FUNCTION AND USE IT IN THE SERVER FILE TO ENCRYPT THE FILE AND RETURN THE ENCRYPTION MESSAGE
-//THEN SEND THE ENCRYPTION MESSAGE TO DEC_CLIENT, FORWARD TO DEC_SERVER AND DO THE OPPOSITE FUNCTIONALITY
 
   // Clear out the buffer array
   memset(buffer, '\0', sizeof(buffer)+1);
-  // Get input from the user, trunc to buffer - 1 chars, leaving \0
-  //fgets(buffer, sizeof(buffer) - 1, encryption(keyText,messageText));
 
   char *encryption_message = send_to_serv(keyText,messageText);
+  //printf("concatenated message: %s\n", encryption_message);
   //strncpy(buffer, encryption_message, sizeof(buffer)-1);
   // Remove the trailing \n that fgets adds
   //buffer[strcspn(buffer, "\n")] = '\0'; 
@@ -161,7 +159,10 @@ int main(int argc, char *argv[]) {
   if (charsRead < 0){
     error("CLIENT: ERROR reading from socket");
   }
-  printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
+  printf("%s\n", buffer);
+  memset(buffer, '\0', sizeof(buffer));
+
+  //printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
   //printf("last char is... -%d-\n",buffer[strlen(buffer)]);
 
   // Close the socket

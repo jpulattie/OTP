@@ -8,17 +8,17 @@ char *generator(int num, char *key)
     int i;
     char alpha;
     int random_number;
-    int max = 27;
+    int max = 26;
     int min = 1;
-    printf("num: %d\n", num);
+    //printf("num: %d\n", num);
     // printf("num equals: %d\n", num);
     key[0] = '\0';
     // char convert[numb + 1];
     for (i = 0; i < num; i++)
     {
         random_number = (rand() % (max - min + 1) + min);
-        printf("random number: %d \n", random_number);
-        printf("random + 64 %d\n", random_number + 64);
+        //printf("random number: %d \n", random_number);
+        //printf("random + 64 %d\n", random_number + 64);
         if (random_number == 27)
         {
             key[i] = ' ';

@@ -18,7 +18,7 @@ char *send_to_serv(char *keyText, char *messageText) {
   combined = calloc(strlen(messageText) + 1 + strlen(keyText), sizeof(char));
   strcpy(combined, messageText);
   //printf("combined -%s-\n", combined);
-  strcat(combined, " ");
+  strcat(combined, "\n");
   //printf("combined -%s-\n", combined);
   strcat(combined, keyText);
   //printf("combined -%s-\n", combined);
@@ -161,7 +161,9 @@ int main(int argc, char *argv[]) {
   if (charsRead < 0){
     error("CLIENT: ERROR reading from socket");
   }
-  printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
+  printf("%s\n", buffer);
+  memset(buffer, '\0', sizeof(buffer));
+  //printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
   //printf("last char is... -%d-\n",buffer[strlen(buffer)]);
 
   // Close the socket
