@@ -1,0 +1,6 @@
+#!/bin/bash
+dec_server testcipher mykey 57176 > c1
+dec_server testcipher mykey 57176 > c2
+dec_server testcipher mykey 57176 > c3
+dec_server testcipher mykey 57176 > c4
+dec_server testcipher mykey 57176 > c5

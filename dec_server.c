@@ -37,8 +37,8 @@ char *encryption(char *buffer)
     // printf("i: %d\n", i);
     int conv;
     printf("messageText[i]: %d\n", messageText[i] - 65);
-    printf("keyText[i]: %d\n", keyText[i + 1] - 65);
-    conv = (((messageText[i] - 65) - (keyText[i + 1] - 65)) % 26);
+    printf("keyText[i]: %d\n", keyText[i] - 65);
+    conv = (((messageText[i] - 65) - (keyText[i] - 65)) % 26);
     printf("conv: %d\n", conv);
 
     if (conv < 0)
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
   }
 
   // Start listening for connetions. Allow up to 5 connections to queue up
-  listen(listenSocket, 100);
+  listen(listenSocket, 5);
 
   // Accept a connection, blocking if one is not available until one connects
   while (1)
@@ -157,6 +157,7 @@ int main(int argc, char *argv[])
         error("ERROR writing to socket");
       }
       printf("return message: %s\n", returnMessage);
+      printf("child process pid %d\n", getpid());
       // Close the connection socket for this client
       free(returnMessage);
       close(connectionSocket);
@@ -166,5 +167,6 @@ int main(int argc, char *argv[])
       printf("%d child process created", spawnpid);
     }
     // Close the listening socket
+    
   }
   }

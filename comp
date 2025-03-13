@@ -1,0 +1,14 @@
+#!/bin/bash
+
+gcc -o dec_client dec_client.c
+gcc -o enc_client enc_client.c
+gcc -o dec_server dec_server.c
+gcc -o dec_server dec_server.c
+gcc -o keygen keygen.c
+lsof -t -i :57176 | xargs kill -9
+dec_server 57176 &
+dec_client testcipher testkey 57176 > c1
+dec_client testcipher testkey 57176 > c2
+dec_client testcipher testkey 57176 > c3
+dec_client testcipher testkey 57176 > c4
+dec_client testcipher testkey 57176 > c5

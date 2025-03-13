@@ -95,7 +95,7 @@ int main(int argc, char *argv[]){
   }
 
   // Start listening for connetions. Allow up to 5 connections to queue up
-  listen(listenSocket, 100); 
+  listen(listenSocket, 5); 
   
   // Accept a connection, blocking if one is not available until one connects
   while(1){
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]){
     //printf("SERVER: Connected to client running at host %d port %d\n", 
     //                      ntohs(clientAddress.sin_addr.s_addr),
     //                      ntohs(clientAddress.sin_port));
-
+      close(listenSocket);
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
     //printf("message: %s", buffer);
@@ -141,6 +141,7 @@ int main(int argc, char *argv[]){
     // Close the connection socket for this client
     free(returnMessage);
     close(connectionSocket); 
+    exit(0);
   }
   case 1 :
     printf("%d child process created", spawnpid);
