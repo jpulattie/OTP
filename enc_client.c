@@ -21,7 +21,7 @@ char *send_to_serv(char *keyText, char *messageText) {
   strcat(combined, " ");
   //printf("combined -%s-\n", combined);
   strcat(combined, keyText);
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
 
   return combined;
 }
