@@ -142,9 +142,6 @@ int main(int argc, char *argv[]){
     free(returnMessage);
     exit(0);
   }
-  else {
-    close(connectionSocket);
-  }
   // Close the listening socket
   close(listenSocket); 
   return 0;
