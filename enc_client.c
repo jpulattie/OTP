@@ -167,6 +167,10 @@ int main(int argc, char *argv[]) {
     if (charsWritten < strlen(encryption_message)){
       printf("CLIENT: WARNING: Not all data written to socket!\n");
     }
+    if (charsWritten == 0) {
+        fprintf(stderr, "CLIENT: Connection closed unexpectedly\n");
+        exit(1);
+    }
     sent += charsWritten;
   }
 

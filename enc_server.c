@@ -121,7 +121,7 @@ int main(int argc, char *argv[]){
     //                      ntohs(clientAddress.sin_port));
       close(listenSocket);
     // Get the message from the client and display it
-    memset(buffer, '\0', 256);
+    memset(buffer, '\0', 80000);
     //printf("message: %s", buffer);
     //printf("After encryption... %s\n", encryption(buffer));
     // Read the client's message from the socket
@@ -147,6 +147,7 @@ int main(int argc, char *argv[]){
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
     //printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
+    
     char *returnMessage = encryption(buffer);
     printf("buffer message: %s\n", buffer);
     // Send a Success message back to the client
@@ -157,6 +158,8 @@ int main(int argc, char *argv[]){
     }
     //printf("return message: %s\n", returnMessage);
     // Close the connection socket for this client
+    memset(buffer, '\0', 80000);
+
     free(returnMessage);
     close(connectionSocket); 
     exit(0);

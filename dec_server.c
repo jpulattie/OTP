@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
     {
       close(listenSocket);
       // Get the message from the client and display it
-      memset(buffer, '\0', 256);
+      memset(buffer, '\0', 80000);
       // printf("message: %s", buffer);
       // printf("After encryption... %s\n", encryption(buffer));
       //  Read the client's message from the socket
@@ -165,6 +165,8 @@ int main(int argc, char *argv[])
       printf("return message: %s\n", returnMessage);
       printf("child process pid %d\n", getpid());
       // Close the connection socket for this client
+      memset(buffer, '\0', 80000);
+
       free(returnMessage);
       close(connectionSocket);
       exit(0);
