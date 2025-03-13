@@ -90,13 +90,7 @@ int main(int argc, char *argv[]) {
   key = strcpy(key, argv[2]);
   char* message = malloc(strlen(argv[1]));
   message = strcpy(message, argv[1]);
-  int j;
-  for (j=0 ; j < strlen(message); j++) {
-    if (!((message[j] >= 'A' && message[j] <= 'Z') || (message[j] >= 'a' && message[j] <= 'z') || message[j] == ' ')){
-      fprintf(stderr, "enc_client error: input contains bad characters\n");
-      exit(1);
-    }
-  }
+  
   int portNumber  = atoi(argv[3]);
   char* hostname= malloc(10);
   hostname = strcpy(hostname, "localhost");
@@ -116,6 +110,14 @@ int main(int argc, char *argv[]) {
   char *messageText;
   messageText = malloc(strlen(readFile(message)));
   messageText = readFile(message);
+  int j;
+  for (j=0 ; j < strlen(messageText); j++) {
+    if (!((messageText[j] >= 'A' && messageText[j] <= 'Z') || (messageText[j] >= 'a' && messageText[j] <= 'z') || messageText[j] == ' '||  messageText[j] == '\n')){
+      //printf("message: %s\n", messageText);
+      fprintf(stderr, "enc_client error: input contains bad characters\n");
+      exit(1);
+    }
+  }
   //printf("key: -%s-\n", keyText);
   //printf("message: -%s-\n", messageText); 
   if ((strlen(keyText)) < strlen(messageText)-1){
