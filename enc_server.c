@@ -70,6 +70,7 @@ int main(int argc, char *argv[]){
   char buffer[256];
   struct sockaddr_in serverAddress, clientAddress;
   socklen_t sizeOfClientInfo = sizeof(clientAddress);
+  pid_t spawnpid;
 
   // Check usage & args
   if (argc < 2) { 
@@ -105,7 +106,13 @@ int main(int argc, char *argv[]){
     if (connectionSocket < 0){
       error("ERROR on accept");
     }
-
+    spawnpid = fork();
+    switch (spawnpid)
+    {
+    case -1:
+      error("ERROR on accept");
+    case 0:
+    {
     //printf("SERVER: Connected to client running at host %d port %d\n", 
     //                      ntohs(clientAddress.sin_addr.s_addr),
     //                      ntohs(clientAddress.sin_port));
@@ -135,7 +142,9 @@ int main(int argc, char *argv[]){
     free(returnMessage);
     close(connectionSocket); 
   }
+  case 1 :
+    printf("%d child process created", spawnpid);
+  }
   // Close the listening socket
-  close(listenSocket); 
-  return 0;
+}
 }
