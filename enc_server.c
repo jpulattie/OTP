@@ -106,13 +106,6 @@ int main(int argc, char *argv[]){
       error("ERROR on accept");
     }
 
-    size_t pid = fork();
-
-    if (pid < 0){
-      error("error forking");
-    }
-    if (pid == 0){
-      close(listenSocket);
     //printf("SERVER: Connected to client running at host %d port %d\n", 
     //                      ntohs(clientAddress.sin_addr.s_addr),
     //                      ntohs(clientAddress.sin_port));
@@ -130,20 +123,19 @@ int main(int argc, char *argv[]){
     //printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
     char *returnMessage = encryption(buffer);
-    //printf("buffer message: %s\n", buffer);
+    printf("buffer message: %s\n", buffer);
     // Send a Success message back to the client
     charsRead = send(connectionSocket, 
                     returnMessage, strlen(returnMessage), 0); 
     if (charsRead < 0){
       error("ERROR writing to socket");
     }
-    printf("return message: %s\n", returnMessage);
+    //printf("return message: %s\n", returnMessage);
     // Close the connection socket for this client
     free(returnMessage);
-    exit(0);
+    close(connectionSocket); 
   }
   // Close the listening socket
   close(listenSocket); 
   return 0;
-}
 }
