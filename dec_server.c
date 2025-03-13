@@ -38,7 +38,11 @@ char *encryption(char *buffer)
     int conv;
     printf("messageText[i]: %d\n", messageText[i] - 65);
     printf("keyText[i]: %d\n", keyText[i] - 65);
+    if (keyText[i] == 10) {
+      conv = (((messageText[i] - 65) - (keyText[i + 1] - 65)) % 26);
+    } else {
     conv = (((messageText[i] - 65) - (keyText[i] - 65)) % 26);
+    }
     printf("conv: %d\n", conv);
 
     if (conv < 0)
