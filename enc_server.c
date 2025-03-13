@@ -21,6 +21,9 @@ char *encryption(char *buffer) {
 
   messageText = strtok(buffer, "\n");
   keyText = strtok(NULL," ");
+  if (keyText[0] == '\n') {
+    memmove(keyText, keyText + 1, strlen(keyText)); 
+  }
   char *enc_string;
   enc_string = calloc(strlen(messageText), sizeof(char));
   //printf("str len of messageText %ld\n", strlen(messageText));
