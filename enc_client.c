@@ -125,8 +125,8 @@ int main(int argc, char *argv[]) {
   char *messageText;
   messageText = malloc(strlen(readFile(message)));
   messageText = readFile(message);
-  printf("key: -%s-\n", keyText);
-  printf("message: -%s-\n", messageText);
+  //printf("key: -%s-\n", keyText);
+  //printf("message: -%s-\n", messageText);
   
 //THIS IS AN INCORRECT SETUP ->. SEND THE KEY TEXT AND MESSAGE TEXT TO THE BUFFER AND OFF TO SERVER 
 //SEPARATED BY A NEW LINE CHAR TO SPLIT THEM
@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
     error("CLIENT: ERROR reading from socket");
   }
   printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
-  printf("last char is... -%d-\n",buffer[strlen(buffer)]);
+  //printf("last char is... -%d-\n",buffer[strlen(buffer)]);
 
   // Close the socket
   close(socketFD); 

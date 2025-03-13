@@ -21,19 +21,19 @@ char *encryption(char *buffer) {
   keyText = strtok(NULL," ");
   char *enc_string;
   enc_string = calloc(strlen(messageText), sizeof(char));
-  printf("str len of messageText %ld\n", strlen(messageText));
-  printf("message to check last char -%s-\n", messageText);
+  //printf("str len of messageText %ld\n", strlen(messageText));
+  //printf("message to check last char -%s-\n", messageText);
   int i;
   for (int i = 0; i < strlen(messageText); i++) {
     messageText[i] = toupper(messageText[i]);
   }
   for (int i=0; i<strlen(messageText); i++) {
-    printf("i: %d\n", i);
+    //printf("i: %d\n", i);
     int conv;
-    printf("messageText[i]: %d\n", messageText[i]-65);
-    printf("keyText[i]: %d\n", keyText[i]-65);
+    //printf("messageText[i]: %d\n", messageText[i]-65);
+    //printf("keyText[i]: %d\n", keyText[i]-65);
     conv = (((messageText[i]-65) - (keyText[i]-65))%26);
-    printf("conv: %d\n", conv);
+    //printf("conv: %d\n", conv);
 
     if (messageText[1] == 32) {
       enc_string[i] = 32;
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
 
     // Get the message from the client and display it
     memset(buffer, '\0', 256);
-    printf("message: %s", buffer);
+    //printf("message: %s", buffer);
     //printf("After encryption... %s\n", encryption(buffer));
     // Read the client's message from the socket
     charsRead = recv(connectionSocket, buffer, 255, 0); 

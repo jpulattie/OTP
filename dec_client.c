@@ -17,11 +17,11 @@ char *send_to_serv(char *keyText, char *messageText) {
   char *combined;
   combined = calloc(strlen(messageText) + 1 + strlen(keyText), sizeof(char));
   strcpy(combined, messageText);
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
   strcat(combined, " ");
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
   strcat(combined, keyText);
-  printf("combined -%s-\n", combined);
+  //printf("combined -%s-\n", combined);
 
   return combined;
 }
@@ -61,7 +61,7 @@ void setupAddressStruct(struct sockaddr_in* address,
   // Store the port number
   address->sin_port = htons(portNumber);
 
-  printf("portNumber: %d hostname: %s\n", portNumber, hostname);
+  //printf("portNumber: %d hostname: %s\n", portNumber, hostname);
   fflush(stdout);
   // Get the DNS entry for this host name
   struct hostent* hostInfo = gethostbyname(hostname); 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
   // Check usage & args
 
   for (int i = 0; i < argc; i++) {
-    printf("argv[%d]: %s\n", i, argv[i]);
+    //printf("argv[%d]: %s\n", i, argv[i]);
 }
 
 // assign args to be 0-input file 1-key 2-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
   int portNumber  = atoi(argv[3]);
   char* hostname= malloc(10);
   hostname = strcpy(hostname, "localhost");
-  printf("hostname %s port %d\n", hostname, portNumber);
+  //printf("hostname %s port %d\n", hostname, portNumber);
   fflush(stdout);
 
   if (argc < 3) { 
@@ -125,8 +125,8 @@ int main(int argc, char *argv[]) {
   char *messageText;
   messageText = malloc(strlen(readFile(message)));
   messageText = readFile(message);
-  printf("key: -%s-\n", keyText);
-  printf("message: -%s-\n", messageText);
+  //printf("key: -%s-\n", keyText);
+  //printf("message: -%s-\n", messageText);
   
 //THIS IS AN INCORRECT SETUP ->. SEND THE KEY TEXT AND MESSAGE TEXT TO THE BUFFER AND OFF TO SERVER 
 //SEPARATED BY A NEW LINE CHAR TO SPLIT THEM
@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
     error("CLIENT: ERROR reading from socket");
   }
   printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
-  printf("last char is... -%d-\n",buffer[strlen(buffer)]);
+  //printf("last char is... -%d-\n",buffer[strlen(buffer)]);
 
   // Close the socket
   close(socketFD); 

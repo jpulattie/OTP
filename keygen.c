@@ -44,9 +44,9 @@ char *generator(int num, char *key)
 int main(int argc, char *argv[])
 {
     int randomGen = atoi(argv[1]);
-    printf("random gen in main: %d", randomGen);
+    //printf("random gen in main: %d", randomGen);
     char key[randomGen];
-    printf("length of key:%ld\n", strlen(key));
+    //printf("length of key:%ld\n", strlen(key));
     int final;
     srand(time(NULL));
     generator(randomGen, key);
