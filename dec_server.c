@@ -87,7 +87,7 @@ void setupAddressStruct(struct sockaddr_in *address,
 int main(int argc, char *argv[])
 {
   int connectionSocket, charsRead;
-  char buffer[256];
+  char buffer[80000];
   struct sockaddr_in serverAddress, clientAddress;
   socklen_t sizeOfClientInfo = sizeof(clientAddress);
   pid_t spawnpid = -5;

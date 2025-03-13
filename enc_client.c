@@ -78,7 +78,7 @@ void setupAddressStruct(struct sockaddr_in* address,
 int main(int argc, char *argv[]) {
   int socketFD, charsWritten, charsRead;
   struct sockaddr_in serverAddress;
-  char buffer[256];
+  char buffer[80000];
   // Check usage & args
 
   for (int i = 0; i < argc; i++) {
