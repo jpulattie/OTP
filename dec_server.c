@@ -146,7 +146,6 @@ int main(int argc, char *argv[]){
     printf("return message: %s\n", returnMessage);
     // Close the connection socket for this client
     free(returnMessage);
-    close(connectionSocket); 
     exit(0);
   } else {
     close(connectionSocket);
