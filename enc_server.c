@@ -106,6 +106,13 @@ int main(int argc, char *argv[]){
       error("ERROR on accept");
     }
 
+    size_t pid = fork();
+
+    if (pid < 0){
+      error("error forking");
+    }
+    if (pid == 0){
+
     //printf("SERVER: Connected to client running at host %d port %d\n", 
     //                      ntohs(clientAddress.sin_addr.s_addr),
     //                      ntohs(clientAddress.sin_port));
@@ -138,4 +145,5 @@ int main(int argc, char *argv[]){
   // Close the listening socket
   close(listenSocket); 
   return 0;
+}
 }
