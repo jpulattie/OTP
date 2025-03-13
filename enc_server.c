@@ -27,7 +27,7 @@ char *encryption(char *buffer) {
   char *enc_string;
   enc_string = calloc(strlen(messageText), sizeof(char));
   //printf("str len of messageText %ld\n", strlen(messageText));
-  //printf("message to check last char -%s-\n", messageText);
+  printf("message to check last char -%s-\n", messageText);
   int i;
   for (int i = 0; i < strlen(messageText); i++) {
     messageText[i] = toupper(messageText[i]);
@@ -38,18 +38,18 @@ char *encryption(char *buffer) {
     //printf("messageText[i]: %d\n", messageText[i]-65);
     //printf("keyText[i]: %d\n", keyText[i]-65);
     conv = (((messageText[i]-65) + (keyText[i]-65))%26);
-    //printf("conv: %d\n", conv);
+    printf("conv: %d\n", conv);
 
     if (messageText[i] == 32) {
       enc_string[i] = 32;
     } else {
       enc_string[i] = conv + 65 ;
     }
-    //printf("encryption string so far... -%s-\n", enc_string);
+    printf("encryption string so far... -%s-\n", enc_string);
   }
 
   //enc_string[strlen(messageText)] = '\0';
-  //printf("encrypted string in server %s\n", enc_string);
+  printf("encrypted string in server %s\n", enc_string);
   return enc_string;
 }
 

@@ -116,6 +116,7 @@ int main(int argc, char *argv[]) {
       //printf("message: %s\n", messageText);
       fprintf(stderr, "enc_client error: input contains bad characters\n");
       exit(1);
+      return 1;
     }
   }
   //printf("key: -%s-\n", keyText);
@@ -126,6 +127,8 @@ int main(int argc, char *argv[]) {
 
     fprintf(stderr,"Error key '%s' is too short\n", argv[2]);
     exit(1);
+    return 1;
+
   }
 
   // Create a socket
