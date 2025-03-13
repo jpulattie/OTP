@@ -145,14 +145,19 @@ int main(int argc, char *argv[]) {
 
   // Send message to server
   // Write to the server
-  charsWritten = send(socketFD, encryption_message, strlen(encryption_message), 0); 
-  if (charsWritten < 0){
-    error("CLIENT: ERROR writing to socket");
+  size_t sent = 0;
+  size_t length = strlen(encryption_message);
+  while (sent < length){
+    charsWritten = send(socketFD, encryption_message + sent, length - sent, 0); 
+    if (charsWritten < 0){
+      error("CLIENT: ERROR writing to socket");
+      exit(1);
+    }
+    if (charsWritten < strlen(encryption_message)){
+      printf("CLIENT: WARNING: Not all data written to socket!\n");
+    }
+    sent += charsWritten;
   }
-  if (charsWritten < strlen(encryption_message)){
-    printf("CLIENT: WARNING: Not all data written to socket!\n");
-  }
-
   // Get return message from server
   // Clear out the buffer again for reuse
   memset(buffer, '\0', sizeof(buffer));

@@ -125,10 +125,25 @@ int main(int argc, char *argv[]){
     //printf("message: %s", buffer);
     //printf("After encryption... %s\n", encryption(buffer));
     // Read the client's message from the socket
-    charsRead = recv(connectionSocket, buffer, 255, 0); 
-    if (charsRead < 0){
-      error("ERROR reading from socket");
+
+    size_t received = 0;
+    while (received < (80000 -1)) {
+      ssize_t charsRead = recv(connectionSocket, buffer + received, 1, 0); 
+
+      if (charsRead < 0){
+        error("ERROR reading from socket");
+        exit(1);
+      } else if (charsRead == 0) {
+        break;
+      }
+
+      if (buffer[received] == '\n') {
+        buffer[received] = '\0';
+        break;
+      }
+      received++;
     }
+    
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
     //printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
