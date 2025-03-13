@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
   }
 
   // Start listening for connetions. Allow up to 5 connections to queue up
-  listen(listenSocket, 5);
+  listen(listenSocket, 100);
 
   // Accept a connection, blocking if one is not available until one connects
   while (1)
