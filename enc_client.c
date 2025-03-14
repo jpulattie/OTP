@@ -21,7 +21,7 @@ char *send_to_serv(char *keyText, char *messageText) {
   strcat(combined, " ");
   //printf("combined -%s-\n", combined);
   strcat(combined, keyText);
-  //printf("combined -%s-\n", combined);
+  printf("combined -%s-\n", combined);
 
   return combined;
 }
@@ -30,6 +30,7 @@ char *send_to_serv(char *keyText, char *messageText) {
 char *readFile(char *filePath){
   char *currLine = NULL;
   size_t len = 0;
+  printf("filePath: %s\n", filePath);
   FILE *inputFile = fopen(filePath, "r");
   fseek(inputFile, 0, SEEK_END);
   long size = ftell(inputFile);
@@ -82,19 +83,19 @@ int main(int argc, char *argv[]) {
   // Check usage & args
 
   for (int i = 0; i < argc; i++) {
-    //printf("argv[%d]: %s\n", i, argv[i]);
+    printf("argv[%d]: %s\n", i, argv[i]);
 }
 
 // assign args to be 0-input file 1-key 2-port and set hostname to local host every time!!!!!!!!!!!!!!!!!!
   char* key = malloc(strlen(argv[2]));
-  key = strcpy(key, argv[2]);
+  strcpy(key, argv[2]);
   char* message = malloc(strlen(argv[1]));
-  message = strcpy(message, argv[1]);
+  strcpy(message, argv[1]);
   
   int portNumber  = atoi(argv[3]);
-  char* hostname= malloc(10);
-  hostname = strcpy(hostname, "localhost");
-
+  char* hostname= malloc(strlen("localhost") + 1);
+  strcpy(hostname, "localhost");
+  printf("key: %s message: %s\n", key, message);
   //printf("hostname %s port %d\n", hostname, portNumber);
   fflush(stdout);
 
@@ -105,10 +106,8 @@ int main(int argc, char *argv[]) {
  // Get input message from user
   //printf("CLIENT: Enter text to send to the server, and then hit enter: ");
   char *keyText;
-  keyText = malloc(strlen(readFile(key)));
   keyText = readFile(key);
   char *messageText;
-  messageText = malloc(strlen(readFile(message)));
   messageText = readFile(message);
   int j;
   for (j=0 ; j < strlen(messageText); j++) {
@@ -156,9 +155,13 @@ int main(int argc, char *argv[]) {
 
   // Send message to server
   // Write to the server
+  printf("sending to server: %s\n", encryption_message);
+  int loop = 0;
   size_t sent = 0;
   size_t length = strlen(encryption_message);
+ 
   while (sent < length){
+    printf("sent: %ld length: %ld\n", sent, length);
     charsWritten = send(socketFD, encryption_message + sent, length - sent, 0); 
     if (charsWritten < 0){
       error("CLIENT: ERROR writing to socket");
@@ -172,22 +175,36 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     sent += charsWritten;
-  }
+    printf("sent#: %d, sent size: %ld length: %ld\n", loop, sent, length);
+    printf("loop break check %d\n", (sent < length));
+    loop += 1;
+    printf("everythng sent\n");
+  //return 0;
+}
 
   
-
   // Get return message from server
   // Clear out the buffer again for reuse
-  memset(buffer, '\0', sizeof(buffer));
+  memset(buffer, '\0', 80000);
+  //printf("buffer size %s\n", buffer);
   // Read data from the socket, leaving \0 at end
-  charsRead = recv(socketFD, buffer, sizeof(buffer) - 1, 0); 
+  printf("end of buffer");
+  charsRead = recv(socketFD, buffer, sizeof(buffer) -1 , 0); 
   if (charsRead < 0){
     error("CLIENT: ERROR reading from socket");
   }
-  printf("%s\n", buffer);
-  memset(buffer, '\0', sizeof(buffer));
+  if (charsRead == 0){
+    error("CLIENT: ERROR socket closed");
+  } 
+  if (charsRead > 0){
+    printf("characters received %d", charsRead);
+    buffer[charsRead] = '\0'; 
+  }
 
-  //printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
+  //printf("chars read: %d\n", charsRead);
+  
+
+  printf("CLIENT: I received this from the server: \"%s\"\n", buffer);
   //printf("last char is... -%d-\n",buffer[strlen(buffer)]);
 
   // Close the socket

@@ -1,0 +1,7 @@
+argv[0]: enc_client
+argv[1]: texttest
+argv[2]: testkey
+argv[3]: 57171
+key: testkey message: texttest
+filePath: testkey
+filePath: texttest

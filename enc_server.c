@@ -16,27 +16,32 @@ void error(const char *msg) {
 
 char *encryption(char *buffer) {
   char *messageText;
-  //printf("buffer text in encryption func: %s\n", buffer);
+  printf("buffer text in encryption func: %s\n", buffer);
   char *keyText;
 
   messageText = strtok(buffer, "\n");
   keyText = strtok(NULL," ");
+  if (messageText == NULL || keyText == NULL) {
+    fprintf(stderr, "Error: Invalid input format.\n");
+    return NULL;
+  }
   if (keyText[0] == '\n') {
     memmove(keyText, keyText + 1, strlen(keyText)); 
   }
   char *enc_string;
-  enc_string = calloc(strlen(messageText), sizeof(char));
-  //printf("str len of messageText %ld\n", strlen(messageText));
+  enc_string = calloc(strlen(messageText) + 1, sizeof(char));
+  printf("str len of messageText %ld\n", strlen(messageText));
   printf("message to check last char -%s-\n", messageText);
   int i;
-  for (int i = 0; i < strlen(messageText); i++) {
-    messageText[i] = toupper(messageText[i]);
+  int j;
+  for (int j = 0; j < strlen(messageText); j++) {
+    messageText[j] = toupper(messageText[j]);
   }
   for (int i=0; i<strlen(messageText); i++) {
-    //printf("i: %d\n", i);
+    printf("i: %d\n", i);
     int conv;
-    //printf("messageText[i]: %d\n", messageText[i]-65);
-    //printf("keyText[i]: %d\n", keyText[i]-65);
+    printf("messageText[i]: %d\n", messageText[i]-65);
+    printf("keyText[i]: %d\n", keyText[i]-65);
     conv = (((messageText[i]-65) + (keyText[i]-65))%26);
     printf("conv: %d\n", conv);
 
@@ -47,8 +52,9 @@ char *encryption(char *buffer) {
     }
     printf("encryption string so far... -%s-\n", enc_string);
   }
+  enc_string[strlen(messageText)] = '\0';
 
-  //enc_string[strlen(messageText)] = '\0';
+  printf("last char: %d\n", (enc_string[strlen(messageText)]));
   printf("encrypted string in server %s\n", enc_string);
   return enc_string;
 }
@@ -73,6 +79,8 @@ int main(int argc, char *argv[]){
   char buffer[80000];
   struct sockaddr_in serverAddress, clientAddress;
   socklen_t sizeOfClientInfo = sizeof(clientAddress);
+  printf("here");
+  fflush(stdout);
   pid_t spawnpid;
 
   // Check usage & args
@@ -107,13 +115,15 @@ int main(int argc, char *argv[]){
                 (struct sockaddr *)&clientAddress, 
                 &sizeOfClientInfo); 
     if (connectionSocket < 0){
-      error("ERROR on accept");
+      error("ERROR on accept2");
+      fflush(stdout);
     }
+
     spawnpid = fork();
     switch (spawnpid)
     {
     case -1:
-      error("ERROR on accept");
+      error("ERROR on accept2");
     case 0:
     {
     //printf("SERVER: Connected to client running at host %d port %d\n", 
@@ -125,10 +135,9 @@ int main(int argc, char *argv[]){
     //printf("message: %s", buffer);
     //printf("After encryption... %s\n", encryption(buffer));
     // Read the client's message from the socket
-
     size_t received = 0;
     while (received < (80000 -1)) {
-      ssize_t charsRead = recv(connectionSocket, buffer + received, 1, 0); 
+      charsRead = recv(connectionSocket, buffer + received, 1, 0); 
 
       if (charsRead < 0){
         error("ERROR reading from socket");
@@ -137,35 +146,44 @@ int main(int argc, char *argv[]){
         break;
       }
 
-      if (buffer[received] == '\n') {
-        buffer[received] = '\0';
+
+      if (buffer[received] == '\0') {
         break;
       }
       received++;
     }
     
     // ENCODE THE MESSAGE HERE!!!!!!!!!!
-    //printf("SERVER: I received this from the client: \"%s\"\n", buffer);
+    printf("SERVER: I received this from the client: \"%s\"\n", buffer);
 
     
     char *returnMessage = encryption(buffer);
-    printf("buffer message: %s\n", buffer);
+    printf("buffer message: %s\n", returnMessage);
+    printf("buffer message size: %ld\n", sizeof(returnMessage));
+    printf("buffer last char %d\n", returnMessage[6]);
+
+    printf("sending to client1: returnMessage %s\n", returnMessage);
+    fflush(stdout);
     // Send a Success message back to the client
     charsRead = send(connectionSocket, 
                     returnMessage, strlen(returnMessage), 0); 
-    if (charsRead < 0){
+    if (charsRead <= 0){
       error("ERROR writing to socket");
     }
-    //printf("return message: %s\n", returnMessage);
-    // Close the connection socket for this client
+    printf("sending to client2: returnMessage %s charsRead=%d\n", returnMessage, charsRead);
+    //fflush(stdout);
     memset(buffer, '\0', 80000);
 
+    
+    //printf("return message: %s\n", returnMessage);
+    // Close the connection socket for this client
     free(returnMessage);
-    close(connectionSocket); 
+    close(connectionSocket);  
     exit(0);
   }
-  case 1 :
-    printf("%d child process created", spawnpid);
+  default :
+    printf("%d child process created2", spawnpid);
+    close(connectionSocket); 
   }
   // Close the listening socket
 }
